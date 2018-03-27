@@ -1,3 +1,5 @@
+require "./collection"
+
 module Granite::ORM::Querying
   class NotFound < Exception
   end  
@@ -45,13 +47,15 @@ module Granite::ORM::Querying
   # that you are using so you are not restricted or dummied down to support a
   # DSL.
   def all(clause = "", params = [] of DB::Any)
-    rows = [] of self
-    @@adapter.select(@@table_name, fields([@@primary_name]), clause, params) do |results|
-      results.each do
-        rows << from_sql(results)
+    Collection(self).new do
+      rows = [] of self
+      @@adapter.select(@@table_name, fields([@@primary_name]), clause, params) do |results|
+        results.each do
+          rows << from_sql(results)
+        end
       end
+      rows
     end
-    return rows
   end
 
   # First adds a `LIMIT 1` clause to the query and returns the first result

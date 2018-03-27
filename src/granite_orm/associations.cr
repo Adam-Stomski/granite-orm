@@ -1,3 +1,5 @@
+require "./association_collection"
+
 module Granite::ORM::Associations
   # define getter and setter for parent relationship
   macro belongs_to(model_name)
@@ -27,6 +29,8 @@ module Granite::ORM::Associations
       foreign_key = "{{children_table.id}}.{{table_name[0...-1]}}_id"
       query = "WHERE #{foreign_key} = ?"
       {{children_class}}.all(query, id)
+
+      Granite::ORM::AssociationCollection(self, {{children_class}}).new(self)
     end
   end
   
