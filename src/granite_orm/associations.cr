@@ -23,13 +23,6 @@ module Granite::ORM::Associations
   macro has_many(children_table)
     def {{children_table.id}}
       {% children_class = children_table.id[0...-1].camelcase %}
-      {% name_space = @type.name.gsub(/::/, "_").downcase.id %}
-      {% table_name = SETTINGS[:table_name] || name_space + "s" %}
-      return [] of {{children_class}} unless id?
-      foreign_key = "{{children_table.id}}.{{table_name[0...-1]}}_id"
-      query = "WHERE #{foreign_key} = ?"
-      {{children_class}}.all(query, id)
-
       Granite::ORM::AssociationCollection(self, {{children_class}}).new(self)
     end
   end

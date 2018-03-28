@@ -5,6 +5,12 @@ class Granite::ORM::Collection(Model)
   private getter data_loaded
   private getter load_block
 
+  def initialize
+    @load_block = -> { [] of Model }
+    @data = [] of Model
+    @data_loaded = false
+  end
+
   def initialize(&block : -> Array(Model))
     @load_block = block
     @data = [] of Model
