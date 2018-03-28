@@ -14,6 +14,13 @@ module {{adapter.capitalize.id}}
       parent.id?.should be_nil
     end
 
+    it "allows setting association" do
+      teacher = Teacher.create(name: "test teacher")
+      klass = Klass.create(name: "test class", teacher: teacher)
+
+      klass.teacher_id?.should eq teacher.id
+    end
+
     describe "with a custom primary key" do
       it "creates a new object" do
         school = School.create(name: "Test School")

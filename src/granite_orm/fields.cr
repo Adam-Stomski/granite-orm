@@ -1,7 +1,7 @@
 require "json"
 
 module Granite::ORM::Fields
-  alias Type = JSON::Type | DB::Any
+  alias Type = JSON::Type | DB::Any | Granite::ORM::Base
   TIME_FORMAT_REGEX = /\d{4,}-\d{2,}-\d{2,}\s\d{2,}:\d{2,}:\d{2,}/
 
   macro included
@@ -115,7 +115,11 @@ module Granite::ORM::Fields
 
     def set_attributes(args : Hash(String | Symbol, Type))
       args.each do |k, v|
-        cast_to_field(k, v.as(Type))
+        if v.is_a?(Granite::ORM::Base)
+          cast_to_field("#{k}_id", v.id)
+        else
+          cast_to_field(k, v.as(Type))
+        end
       end
     end
 

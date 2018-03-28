@@ -82,7 +82,7 @@ module Granite::ORM::Transactions
       create(args.to_h)
     end
 
-    def create(args : Hash(Symbol | String, DB::Any))
+    def create(args : Hash(Symbol | String, Fields::Type))
       instance = new
       instance.set_attributes(args)
       instance.save
