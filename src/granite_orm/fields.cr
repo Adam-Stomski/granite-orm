@@ -115,14 +115,27 @@ module Granite::ORM::Fields
             end
 
             return @{{_name.id}} = nil if value.nil?
+
             {% if type.id == Int32.id %}
-              @{{_name.id}} = value.is_a?(String) ? value.to_i32(strict: false) : value.is_a?(Int64) ? value.to_i32 : value.as(Int32)
+              @{{_name.id}} = value.is_a?(String) ?
+                value.to_i32(strict: false) :
+                value.is_a?(Number) ? value.to_i32 : nil
+
             {% elsif type.id == Int64.id %}
-              @{{_name.id}} = value.is_a?(String) ? value.to_i64(strict: false) : value.as(Int64)
+              @{{_name.id}} = value.is_a?(String) ?
+                value.to_i64(strict: false) :
+                value.is_a?(Number) ? value.to_i64 : nil
+
             {% elsif type.id == Float32.id %}
-              @{{_name.id}} = value.is_a?(String) ? value.to_f32(strict: false) : value.is_a?(Float64) ? value.to_f32 : value.as(Float32)
+              @{{_name.id}} = value.is_a?(String) ?
+                value.to_f32(strict: false) :
+                value.is_a?(Number) ? value.to_f32 : nil
+
             {% elsif type.id == Float64.id %}
-              @{{_name.id}} = value.is_a?(String) ? value.to_f64(strict: false) : value.as(Float64)
+              @{{_name.id}} = value.is_a?(String) ?
+                value.to_f64(strict: false) :
+                value.is_a?(Number) ? value.to_f64 : nil
+
             {% elsif type.id == Bool.id %}
               @{{_name.id}} = ["1", "yes", "true", true].includes?(value)
             {% elsif type.id == Time.id %}
